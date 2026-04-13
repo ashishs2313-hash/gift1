@@ -1,0 +1,660 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>For My Mudhu Amma 💖</title>
+  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,600;1,400&family=Poppins:wght@300;400;500&display=swap" rel="stylesheet"/>
+
+  <style>
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+
+    body {
+      min-height: 100vh;
+      font-family: 'Poppins', sans-serif;
+      background: #1a0005;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      overflow: hidden;
+    }
+
+    .hearts-bg {
+      position: fixed;
+      top: 0; left: 0;
+      width: 100%; height: 100%;
+      pointer-events: none;
+      z-index: 0;
+    }
+    .heart-particle {
+      position: absolute;
+      font-size: 1.2rem;
+      animation: floatUp linear infinite;
+      opacity: 0;
+    }
+    @keyframes floatUp {
+      0%   { transform: translateY(100vh) rotate(0deg); opacity: 0.6; }
+      100% { transform: translateY(-10vh) rotate(360deg); opacity: 0; }
+    }
+
+    /* ══ PAGE 1 — LOCK SCREEN ══ */
+    #lockScreen {
+      position: relative;
+      z-index: 10;
+      width: 100%;
+      max-width: 400px;
+      padding: 20px;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 20px;
+      background-image: url("img.jpeg");
+      background-size: cover;
+      background-position: center;
+      border-radius: 24px;
+      box-shadow: inset 0 0 0 2000px rgba(26, 0, 5, 0.65);
+    }
+
+    .lock-title {
+      color: white;
+      font-family: 'Playfair Display', serif;
+      font-size: 1.3rem;
+      text-align: center;
+      line-height: 1.6;
+    }
+    .lock-subtitle {
+      color: #ff8fab;
+      font-size: 0.85rem;
+      text-align: center;
+    }
+
+    .code-display {
+      display: flex;
+      gap: 12px;
+    }
+    .code-box {
+      width: 48px; height: 48px;
+      border: 2px solid #ff4d6d;
+      border-radius: 8px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 1.5rem;
+      color: white;
+      background: rgba(255,77,109,0.1);
+      transition: all 0.2s;
+    }
+    .code-box.filled {
+      background: rgba(255,77,109,0.3);
+      border-color: #ff8fab;
+    }
+
+    .keypad {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 12px;
+      width: 100%;
+    }
+    .key {
+      background: rgba(255,255,255,0.08);
+      border: 1.5px solid rgba(255,77,109,0.4);
+      color: white;
+      font-size: 1.2rem;
+      font-family: 'Poppins', sans-serif;
+      font-weight: 500;
+      border-radius: 50%;
+      width: 64px; height: 64px;
+      margin: auto;
+      cursor: pointer;
+      transition: all 0.15s;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+    .key:active, .key:hover {
+      background: rgba(255,77,109,0.3);
+      border-color: #ff4d6d;
+      transform: scale(0.95);
+    }
+    .key.delete { font-size: 1rem; }
+
+    @keyframes shake {
+      0%, 100% { transform: translateX(0); }
+      20%       { transform: translateX(-10px); }
+      40%       { transform: translateX(10px); }
+      60%       { transform: translateX(-8px); }
+      80%       { transform: translateX(8px); }
+    }
+    .shake { animation: shake 0.4s ease; }
+
+    .wrong-msg {
+      color: #ff4d6d;
+      font-size: 0.8rem;
+      min-height: 20px;
+      text-align: center;
+    }
+
+    /* ══ PAGE 2 — CHAT SCREEN ══ */
+    #loveScreen {
+      display: none;
+      position: fixed;
+      inset: 0;
+      z-index: 20;
+      background: #0d0010;
+      flex-direction: column;
+    }
+
+    .chat-header {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      padding: 16px 20px;
+      background: rgba(255,77,109,0.1);
+      border-bottom: 1px solid rgba(255,77,109,0.2);
+      position: sticky;
+      top: 0;
+      z-index: 10;
+    }
+
+    .chat-avatar {
+      width: 45px;
+      height: 45px;
+      border-radius: 50%;
+      background: linear-gradient(135deg, #ff4d6d, #ff8fab);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 1.3rem;
+      flex-shrink: 0;
+      overflow: hidden;
+    }
+
+    .chat-avatar img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      border-radius: 50%;
+    }
+
+    .chat-name {
+      color: white;
+      font-weight: 500;
+      font-size: 1rem;
+    }
+
+    .chat-status {
+      color: #4cff91;
+      font-size: 0.75rem;
+    }
+
+    .chat-body {
+      flex: 1;
+      overflow-y: auto;
+      padding: 20px 16px;
+      display: flex;
+      flex-direction: column;
+      gap: 16px;
+    }
+
+    .bubble {
+      max-width: 82%;
+      padding: 14px 18px;
+      border-radius: 20px;
+      font-size: 0.9rem;
+      line-height: 1.8;
+      color: #ffe0e8;
+      animation: popIn 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275) forwards;
+      opacity: 0;
+    }
+
+    .bubble.sent {
+      background: linear-gradient(135deg, #ff4d6d, #c9184a);
+      align-self: flex-end;
+      border-bottom-right-radius: 4px;
+      color: white;
+    }
+
+    .bubble.received {
+      background: rgba(255,255,255,0.08);
+      border: 1px solid rgba(255,77,109,0.3);
+      align-self: flex-start;
+      border-bottom-left-radius: 4px;
+    }
+
+    @keyframes popIn {
+      from { opacity: 0; transform: scale(0.8) translateY(10px); }
+      to   { opacity: 1; transform: scale(1) translateY(0); }
+    }
+
+    .typing {
+      display: flex;
+      align-items: center;
+      gap: 5px;
+      padding: 14px 18px;
+      background: rgba(255,255,255,0.08);
+      border: 1px solid rgba(255,77,109,0.3);
+      border-radius: 20px;
+      border-bottom-left-radius: 4px;
+      align-self: flex-start;
+      width: fit-content;
+    }
+
+    .typing span {
+      width: 8px;
+      height: 8px;
+      background: #ff8fab;
+      border-radius: 50%;
+      animation: bounce 1.2s infinite;
+    }
+    .typing span:nth-child(2) { animation-delay: 0.2s; }
+    .typing span:nth-child(3) { animation-delay: 0.4s; }
+
+    @keyframes bounce {
+      0%, 100% { transform: translateY(0); opacity: 0.4; }
+      50%       { transform: translateY(-6px); opacity: 1; }
+    }
+
+    .chat-footer {
+      padding: 16px 20px;
+      background: rgba(255,77,109,0.05);
+      border-top: 1px solid rgba(255,77,109,0.15);
+    }
+
+    .read-btn {
+      width: 100%;
+      padding: 14px;
+      background: linear-gradient(135deg, #ff4d6d, #c9184a);
+      color: white;
+      border: none;
+      border-radius: 50px;
+      font-size: 1rem;
+      font-family: 'Poppins', sans-serif;
+      font-weight: 500;
+      cursor: pointer;
+      transition: all 0.2s;
+    }
+
+    .read-btn:active { transform: scale(0.97); opacity: 0.9; }
+    .read-btn:disabled {
+      background: rgba(255,255,255,0.1);
+      color: #888;
+      cursor: not-allowed;
+    }
+
+    /* ══ PAGE 3 — FIREWORKS ══ */
+    #fireworksScreen {
+      display: none;
+      position: fixed;
+      inset: 0;
+      z-index: 30;
+      background: #000;
+      overflow: hidden;
+    }
+
+    #fireworksCanvas {
+      position: absolute;
+      inset: 0;
+      width: 100%;
+      height: 100%;
+    }
+
+    .finale-msg {
+      position: absolute;
+      inset: 0;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      text-align: center;
+      padding: 30px;
+      z-index: 10;
+      opacity: 0;
+      animation: fadeInUp 1.5s ease 1.5s forwards;
+    }
+
+    @keyframes fadeInUp {
+      from { opacity: 0; transform: translateY(40px); }
+      to   { opacity: 1; transform: translateY(0); }
+    }
+
+    .finale-line1 {
+      font-size: 1.4rem;
+      color: #ffd700;
+      font-family: 'Playfair Display', serif;
+      margin-bottom: 20px;
+      letter-spacing: 2px;
+    }
+
+    .finale-line2 {
+      font-size: 1.6rem;
+      color: white;
+      font-family: 'Playfair Display', serif;
+      font-style: italic;
+      line-height: 1.8;
+      margin-bottom: 20px;
+      text-shadow: 0 0 20px rgba(255,215,0,0.8),
+                   0 0 40px rgba(255,150,0,0.5);
+    }
+
+    .finale-line3 {
+      font-size: 1rem;
+      color: #ff8fab;
+      font-family: 'Poppins', sans-serif;
+    }
+  </style>
+</head>
+<body>
+
+  <div class="hearts-bg" id="heartsBg"></div>
+
+  <!-- ══ PAGE 1 — LOCK SCREEN ══ -->
+  <div id="lockScreen">
+
+    <div class="lock-title">🔐 You've got a secret surprise...</div>
+    <div class="lock-subtitle">Enter the passcode to unlock it 💝</div>
+
+    <div class="code-display" id="codeDisplay">
+      <div class="code-box" id="box0"></div>
+      <div class="code-box" id="box1"></div>
+      <div class="code-box" id="box2"></div>
+      <div class="code-box" id="box3"></div>
+    </div>
+
+    <div class="wrong-msg" id="wrongMsg"></div>
+
+    <div class="keypad">
+      <div class="key" onclick="pressKey('1')">1</div>
+      <div class="key" onclick="pressKey('2')">2</div>
+      <div class="key" onclick="pressKey('3')">3</div>
+      <div class="key" onclick="pressKey('4')">4</div>
+      <div class="key" onclick="pressKey('5')">5</div>
+      <div class="key" onclick="pressKey('6')">6</div>
+      <div class="key" onclick="pressKey('7')">7</div>
+      <div class="key" onclick="pressKey('8')">8</div>
+      <div class="key" onclick="pressKey('9')">9</div>
+      <div class="key" onclick="pressKey('*')">✱</div>
+      <div class="key" onclick="pressKey('0')">0</div>
+      <div class="key delete" onclick="deleteKey()">⌫</div>
+    </div>
+
+  </div>
+
+  <!-- ══ PAGE 2 — CHAT SCREEN ══ -->
+  <div id="loveScreen">
+
+    <div class="chat-header">
+      <div class="chat-avatar">
+        <!-- 👇 REPLACE with your image -->
+        <img src="img6.jpg" alt="amma" />
+      </div>
+      <div class="chat-info">
+        <div class="chat-name">Mudhu maga 🥰</div>
+        <div class="chat-status" id="chatStatus">online</div>
+      </div>
+    </div>
+
+    <div class="chat-body" id="chatBody"></div>
+
+    <div class="chat-footer">
+      <button class="read-btn" id="readBtn" onclick="nextMessage()">
+        Read ❤️
+      </button>
+    </div>
+
+  </div>
+
+  <!-- ══ PAGE 3 — FIREWORKS ══ -->
+  <div id="fireworksScreen">
+    <canvas id="fireworksCanvas"></canvas>
+    <div class="finale-msg">
+      <!-- 👇 CHANGE THESE LINES -->
+      <div class="finale-line1">🎇 Always & Forever 🎇</div>
+      <div class="finale-line2">Your maga loves you more than<br/>the whole universe amma 💛</div>
+      <div class="finale-line3">— forever yours 🥰</div>
+    </div>
+  </div>
+
+  <script>
+    const PASSCODE = "1319"; // 👈 your passcode
+
+    const messages = [
+      `Remember those late night calls that never seemed to end? The texts that were so long, our phones would lag? The way we'd tell each other everything — every random thought, every silly moment, every tiny feeling... like the world could wait.<br><br>
+      Somewhere along the way, the calls got shorter. The texts got fewer. The meetings became something we wait for instead of something that just... happens.<br><br>
+      I won't lie — I notice it. I feel it.<br><br>
+      But here's what I also know — none of that changed what's underneath. Not even a little. The love? It's exactly where we left it. Constant. Quiet. Unshaken.<br><br>
+      I'm not writing this to make you feel guilty amma... I'm writing this because I miss you. The you and me that used to talk about nothing for hours. And I just wanted you to know — I still think about those moments. Every single day. 🥲💛`,
+
+      `And sometimes... I can tell. Even through a screen.<br><br>
+      When your texts feel a little dry, when you go quiet in the middle of a conversation, when something's off — I notice. I always notice. Because I've learned you, amma. Every version of you. The happy you, the tired you, the irritated you, the zoned-out you.<br><br>
+      I don't always say anything. But I feel it.<br><br>
+      If one good conversation doesn't happen, my whole day feels a little incomplete. Sounds dramatic maybe — but that's just what you do to me. You became a part of my daily peace without even trying. 😅<br><br>
+      And the missing... god, the missing. There are moments I miss you so badly I don't even know how to explain it. It just sits there — heavy and quiet — in the middle of my chest.<br><br>
+      But losing you? That's never an option. Not now. Not ever.<br><br>
+      Because whatever this is — this feeling, this connection, this love — I'm pretty sure that's the real thing. 😁💛`,
+
+      `You know what I do when you're busy?<br><br>
+      I think about you.<br><br>
+      I know you're out with friends, or with family, or caught up in work — I know that. My mind knows that. But this little heart of mine? It doesn't care. It just sits there... quietly waiting. Waiting for your name to pop up on my screen. Waiting for that one text that makes everything feel okay again.<br><br>
+      And when a day passes without really having you — not just 'available' you, but really YOU, the you that talks and laughs and feels present — that's when it hits the hardest.<br><br>
+      There are moments amma... I won't lie... I've cried. Over missing you. Over craving a conversation that just didn't come. Over wanting your attention in a world that's constantly pulling you somewhere else.<br><br>
+      I crave your love more than you probably know. More than I even admit to myself sometimes.<br><br>
+      But I never say any of this out loud — because I don't want to be your burden. I just want to be your person. 🥲💛`,
+
+      `I see you, amma.<br><br>
+      The weight you carry. The responsibilities that pile up. The days when everything feels like too much and you're running on empty — I see all of it.<br><br>
+      And sometimes... you take it out on me. A sharp word, a cold reply, a tone that stings a little. I won't pretend it doesn't hurt — because it does, just for a moment.<br><br>
+      But then I think — this isn't her. This is just her exhaustion talking. This is just the weight she's been carrying all day finally finding a place to land. And somehow, even in that moment, all I feel is love. Because I'd rather be the place your frustration lands than have you carry it alone. 😁🥲<br><br>
+      I don't know everything you went through before me. But I know this — you deserve softness. You deserve someone in your corner who doesn't leave when things get hard.<br><br>
+      And that's me. That's always going to be me.<br><br>
+      I promised you, amma. And I meant every word of it — I will stay beside you, support you, and make you happy. Not sometimes. Always.<br><br>
+      You are worth every bit of love I have to give. Every single bit. 🫶<br><br>
+      Your lovely maga isn't going anywhere. Not today, not ever. 😁🥰💛`,
+
+      `But amma... above everything I just said...<br><br>
+      You gave me something nobody ever gave me before.<br><br>
+      Love. Real love. The kind that makes you feel seen, feel safe, feel like you finally belong somewhere. Before you, I didn't know it could feel like this. And now I can't imagine it any other way.<br><br>
+      You are my world 🌎. My pasandida aurat. My kanda. My amma. My darling. Every word feels small for what you actually are to me.<br><br>
+      And yes — we've had our fights. Those moments where my heart races and I think... what if I lose her? What will I even do? The thought alone scares me more than anything.<br><br>
+      But look at us amma. We always come back. Every single time — love wins over ego. We never let things sit too long. We fix it, we grow, we choose each other again.<br><br>
+      That's not small. That's everything.<br><br>
+      That's why our love keeps growing. That's why what we have is real.<br><br>
+      I love you sooooooo much amma. More than these words. More than this page. More than I'll ever be able to explain. ❤️<br><br>
+      — Your maga, always. 💛`,
+
+      `And amma...<br><br>
+      You may doubt your decisions sometimes. Lie awake wondering if you're on the right path. But from where I stand — you are. You always have been. Every step you've taken, every choice you've made — I've watched it all and I've only felt one thing. Pride. Pure, quiet pride. 🥹<br><br>
+      You may think you're not beautiful enough, not cute enough, not enough — but amma, you are the most beautiful person I've ever seen. Not just your face. Your heart. The way you care. The way you love. The way you stay strong even when you're falling apart inside.<br><br>
+      You inspired me more than you'll ever know. And you probably have no idea. 🫶<br><br>
+      So this maga thought — someone this special deserves something special.<br><br>
+      This bracelet you're holding right now... look at the back, amma.<br><br>
+      It says — <strong>私の母親</strong><br><br>
+      <em>"My Amma."</em><br><br>
+      In a language as beautiful as you are. 🌹<br><br>
+      You took a huge risk for me. You loved me when I needed it most. And I promise — this maga will spend every single day giving you back all the love you deserve.<br><br>
+      All of it. And then some.<br><br>
+      I love you amma. More than words. More than pages. More than everything. ❤️💗<br><br>
+      — Your maga, forever. 🥰`
+    ];
+
+    let currentMsg = 0;
+    let entered = "";
+
+    function pressKey(val) {
+      if (entered.length >= PASSCODE.length) return;
+      entered += val;
+      updateDisplay();
+      if (entered.length === PASSCODE.length) setTimeout(checkCode, 300);
+    }
+
+    function deleteKey() {
+      entered = entered.slice(0, -1);
+      updateDisplay();
+      document.getElementById("wrongMsg").textContent = "";
+    }
+
+    function updateDisplay() {
+      for (let i = 0; i < PASSCODE.length; i++) {
+        const box = document.getElementById("box" + i);
+        if (i < entered.length) {
+          box.textContent = "●";
+          box.classList.add("filled");
+        } else {
+          box.textContent = "";
+          box.classList.remove("filled");
+        }
+      }
+    }
+
+    function checkCode() {
+      if (entered === PASSCODE) {
+        unlockLove();
+      } else {
+        const display = document.getElementById("codeDisplay");
+        display.classList.add("shake");
+        setTimeout(() => display.classList.remove("shake"), 400);
+        document.getElementById("wrongMsg").textContent = "Nope! Try again 😜";
+        entered = "";
+        updateDisplay();
+      }
+    }
+
+    function unlockLove() {
+      document.getElementById("lockScreen").style.display = "none";
+      const love = document.getElementById("loveScreen");
+      love.style.display = "flex";
+      setTimeout(() => showTypingThenMessage(), 600);
+    }
+
+    function showTypingThenMessage() {
+      const body = document.getElementById("chatBody");
+      document.getElementById("readBtn").disabled = true;
+      document.getElementById("chatStatus").textContent = "typing...";
+
+      const typing = document.createElement("div");
+      typing.className = "typing";
+      typing.innerHTML = `<span></span><span></span><span></span>`;
+      body.appendChild(typing);
+      body.scrollTop = body.scrollHeight;
+
+      setTimeout(() => {
+        typing.remove();
+        document.getElementById("chatStatus").textContent = "online";
+
+        const bubble = document.createElement("div");
+        bubble.className = "bubble received";
+        bubble.innerHTML = messages[currentMsg];
+        body.appendChild(bubble);
+        body.scrollTop = body.scrollHeight;
+
+        if (currentMsg === messages.length - 1) {
+          document.getElementById("readBtn").textContent = "💝 Thank you amma";
+          document.getElementById("readBtn").disabled = false;
+          document.getElementById("readBtn").onclick = launchFireworks;
+        } else {
+          document.getElementById("readBtn").disabled = false;
+        }
+
+        currentMsg++;
+      }, 2000);
+    }
+
+    function nextMessage() {
+      if (currentMsg >= messages.length) return;
+      const body = document.getElementById("chatBody");
+      const replies = ["🥹", "❤️", "reading...", "💛", "🥺", "💝"];
+      const reply = document.createElement("div");
+      reply.className = "bubble sent";
+      reply.textContent = replies[currentMsg - 1] || "❤️";
+      body.appendChild(reply);
+      body.scrollTop = body.scrollHeight;
+      document.getElementById("readBtn").disabled = true;
+      setTimeout(() => showTypingThenMessage(), 800);
+    }
+
+    function launchFireworks() {
+      document.getElementById("loveScreen").style.display = "none";
+      document.getElementById("fireworksScreen").style.display = "block";
+      startFireworks();
+    }
+
+    function startFireworks() {
+      const canvas = document.getElementById("fireworksCanvas");
+      const ctx = canvas.getContext("2d");
+      canvas.width  = window.innerWidth;
+      canvas.height = window.innerHeight;
+
+      const particles = [];
+      const colors = ["#ff4d6d","#ff8fab","#ffd700","#ff6b6b","#ffa500","#ff69b4","#fff","#ffec99","#ff85a1"];
+
+      function createExplosion(x, y) {
+        for (let i = 0; i < 80; i++) {
+          const angle = (Math.PI * 2 / 80) * i;
+          const speed = 2 + Math.random() * 5;
+          particles.push({
+            x, y,
+            vx: Math.cos(angle) * speed,
+            vy: Math.sin(angle) * speed,
+            alpha: 1,
+            color: colors[Math.floor(Math.random() * colors.length)],
+            radius: 2 + Math.random() * 3,
+            gravity: 0.08,
+            decay: 0.012 + Math.random() * 0.01
+          });
+        }
+      }
+
+      function launchRandom() {
+        createExplosion(
+          60 + Math.random() * (canvas.width - 120),
+          60 + Math.random() * (canvas.height * 0.6)
+        );
+      }
+
+      launchRandom(); launchRandom();
+      const launcher = setInterval(() => {
+        launchRandom();
+        if (Math.random() > 0.5) launchRandom();
+      }, 600);
+      setTimeout(() => clearInterval(launcher), 8000);
+
+      function animate() {
+        ctx.fillStyle = "rgba(0,0,0,0.18)";
+        ctx.fillRect(0, 0, canvas.width, canvas.height);
+        for (let i = particles.length - 1; i >= 0; i--) {
+          const p = particles[i];
+          p.x += p.vx; p.y += p.vy;
+          p.vy += p.gravity; p.vx *= 0.99;
+          p.alpha -= p.decay;
+          if (p.alpha <= 0) { particles.splice(i, 1); continue; }
+          ctx.save();
+          ctx.globalAlpha = p.alpha;
+          ctx.beginPath();
+          ctx.arc(p.x, p.y, p.radius, 0, Math.PI * 2);
+          ctx.fillStyle = p.color;
+          ctx.shadowBlur = 8;
+          ctx.shadowColor = p.color;
+          ctx.fill();
+          ctx.restore();
+        }
+        requestAnimationFrame(animate);
+      }
+      animate();
+    }
+
+    // floating hearts
+    const heartEmojis = ["💖", "🌸", "✨", "💝", "❤️"];
+    const bg = document.getElementById("heartsBg");
+    for (let i = 0; i < 18; i++) {
+      const h = document.createElement("div");
+      h.className = "heart-particle";
+      h.textContent = heartEmojis[Math.floor(Math.random() * heartEmojis.length)];
+      h.style.left = Math.random() * 100 + "vw";
+      h.style.animationDuration = (6 + Math.random() * 8) + "s";
+      h.style.animationDelay = (Math.random() * 8) + "s";
+      h.style.fontSize = (0.8 + Math.random() * 0.8) + "rem";
+      bg.appendChild(h);
+    }
+  </script>
+
+</body>
+</html>
